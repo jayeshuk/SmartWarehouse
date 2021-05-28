@@ -15,6 +15,7 @@ import {logUser} from '../redux-store/actions';
 import jwt_decode from 'jwt-decode';
 import {useSelector, useDispatch} from 'react-redux';
 import {LogBox} from 'react-native';
+import {getMaxListeners} from 'node:process';
 
 export default function Home({navigation}) {
   LogBox.ignoreLogs([
@@ -24,18 +25,27 @@ export default function Home({navigation}) {
   const [password, setPassword] = useState('');
   const [visible, setVisible] = useState(false);
   const [hidePass, setHidePass] = useState(false);
-  const [role, setRole] = useState(0);
+  const [role, setRole] = useState('');
 
   const dispatch = useDispatch();
   const LogUser = logindata => dispatch(logUser(logindata));
   const giveRole = n => {
-    setRole(n);
+    setRole(n[0].value);
   };
 
-  var data = JSON.stringify({email: email, password: password});
+  var data = JSON.stringify({
+    email: 'hariomlapshetwar@gmail.com',
+    password: 'Jayesh@1234',
+    role: 'warehouseowner',
+  });
+  // var data = JSON.stringify({
+  //   email: email,
+  //   password: password,
+  //   role: role.length > 0 ? role.toLowerCase() : '',
+  // });
   var config = {
     method: 'post',
-    url: 'http://192.168.0.108:3000/api/v1/users/login',
+    url: 'http://192.168.43.132:3000/api/v1/users/login',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -43,19 +53,23 @@ export default function Home({navigation}) {
   };
 
   const loginByPass = () => {
-    console.log(role);
-    switch (role[0].label) {
-      case 'Farmer':
-        navigation && navigation.navigate('FarmerNav');
-        break;
-      case 'Warehouse Owner':
-        navigation && navigation.navigate('WareNav');
-        break;
-      case 'Buyer':
-        navigation && navigation.navigate('BuyerNav');
-        break;
-      default:
-        console.log('Login Route Failed!!');
+    console.log(data.role);
+    if (role) {
+      switch (role) {
+        case 'farmer':
+          navigation && navigation.navigate('FarmerNav');
+          break;
+        case 'warehouseowner':
+          navigation && navigation.navigate('WareNav');
+          break;
+        case 'buyer':
+          navigation && navigation.navigate('BuyerNav');
+          break;
+        default:
+          console.log('Login Route Failed!!');
+      }
+    } else {
+      alert('Login Failed. Please Select a Role.');
     }
   };
 
@@ -70,10 +84,11 @@ export default function Home({navigation}) {
             token: res.data.token,
             email: email,
             id: decoded.id,
-            role: role < 1 ? 'farmer' : role < 2 ? 'warehouseowner' : 'buyer',
+            role: role.toLowerCase(),
             address: decoded.add,
           });
         }
+        loginByPass();
         return res.data;
       })
       .catch(function (error) {
@@ -156,7 +171,9 @@ export default function Home({navigation}) {
         icon="account-arrow-right"
         style={{alignSelf: 'center', margin: '10%'}}
         labelStyle={{fontSize: 16}}
-        onPress={loginByPass}>
+        onPress={() => {
+          loginPress();
+        }}>
         Log In
       </Button>
 
@@ -174,7 +191,7 @@ export default function Home({navigation}) {
         visible={visible}
         onDismiss={() => setVisible(!visible)}
         style={{width: '80%', alignSelf: 'center', marginVertical: '10%'}}
-        duration={1000}
+        duration={2000}
         action={{
           label: 'Ok',
           onPress: () => {

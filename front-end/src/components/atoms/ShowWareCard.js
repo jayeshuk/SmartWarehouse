@@ -7,14 +7,19 @@ export default function ShowWareCard(props) {
   const LeftContent = props => <Avatar.Icon {...props} icon="barn" size={45} />;
 
   return (
-    <Card style={{margin: '3%', height: '14%'}} mode="elevated" elevation={5}>
+    <Card style={{margin: '3%'}} mode="elevated" elevation={5}>
       <Pressable
         android_ripple={{color: 'grey', borderless: true}}
         onPress={() => props.handlePress(props)}>
         <Card.Title
           title={props.name}
-          subtitle={props.address}
+          subtitle={
+            props.address.split(' ')[props.address.split(' ').length - 1]
+          }
           left={LeftContent}
+          subtitleNumberOfLines={2}
+          titleStyle={{width: '65%'}}
+          subtitleStyle={{width: '50%', fontSize: 16}}
         />
         <Card.Content
           style={{flexDirection: 'row', justifyContent: 'space-around'}}>
@@ -30,6 +35,8 @@ export default function ShowWareCard(props) {
               backgroundColor: 'yellow',
               opacity: 0.8,
               padding: 4,
+              right: '-80%',
+              bottom: '3%',
             }}
             theme={{fonts: {medium: 'Comic Sans'}}}>
             {'\u20B9'}

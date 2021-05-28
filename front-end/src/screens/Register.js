@@ -8,6 +8,7 @@ import {
   HelperText,
 } from 'react-native-paper';
 import RolePicker from '../components/atoms/RolePicker';
+import axios from 'axios';
 
 export default function Register({route, navigation}) {
   const [p, setP] = useState(false);
@@ -22,41 +23,41 @@ export default function Register({route, navigation}) {
     isValid: true,
   });
   const [match, setMatch] = useState(true);
-  const [role, setRole] = useState(0);
+  const [role, setRole] = useState('');
   const giveRole = n => {
-    setRole(n);
+    setRole(n[0].label);
   };
 
-  var formData = [
+  var formFieldsData = [
     {id: 0, obj: firstName, label: 'First Name', change: setFirstName},
     {id: 1, obj: lastName, label: 'Last Name', change: setLastName},
     {id: 2, obj: phone, label: 'Contact No.', change: setPhone},
     {id: 3, obj: email, label: 'Email Id', change: setEmail},
   ];
   var data = JSON.stringify({
-    role: role < 1 ? 'farmer' : role < 2 ? 'warehouseowner' : 'buyer',
-    firstName: firstName,
-    lastName: lastName,
-    phone: phone,
-    email: email,
-    password: password,
+    role: role.length > 0 ? role.toLowerCase() : '',
+    firstName: firstName.value,
+    lastName: lastName.value,
+    phone: phone.value,
+    email: email.value,
+    password: password.value,
+    confirmPassword: confirmPassword.value,
     // address: address || '',
   });
   var config = {
     method: 'post',
-    url: 'http://192.168.0.108:3000/api/v1/users/signup',
+    url: 'http://192.168.43.132:3000/api/v1/users/signup',
     headers: {
       'Content-Type': 'application/json',
     },
     data: data,
   };
 
-  const onSignUpButtonPress = async () => {
+  const onRegister = async () => {
     await axios(config)
       .then(function (res) {
-        // console.log(JSON.stringify(res.data));
         if (res.data.status === 'success') {
-          navigation && navigation.navigate('LoginScreen');
+          navigation && navigation.goBack();
         }
         return res.data;
       })
@@ -102,7 +103,7 @@ export default function Register({route, navigation}) {
       </View>
       <RolePicker giveRole={giveRole} />
       <View style={{marginVertical: '10%'}}>
-        {formData.map((item, index) => {
+        {formFieldsData.map((item, index) => {
           return (
             <View key={item.id}>
               <TextInput
@@ -203,6 +204,8 @@ export default function Register({route, navigation}) {
         onPress={() => {
           // navigation.goBack();
           ValidateFields();
+          onRegister();
+          route.params.setVisible(true);
         }}>
         Register
       </Button>

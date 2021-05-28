@@ -4,8 +4,38 @@ import {Button, Title, TextInput, Snackbar} from 'react-native-paper';
 
 export default function FillOrder({route, navigation}) {
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [qty, setQty] = useState('');
+  const [phone, setPhone] = useState(0);
+  const [qty, setQty] = useState(0);
+  const [amount, setAmount] = useState();
+
+  // route.params.wareowner_id
+
+  // var data = JSON.stringify({
+  //   "role": "farmer",
+  //   "firstName": "Omkar",
+  //   "lastName": "Kadam",
+  //   "phone": 9132855182,
+  //   "email": "jayeshukalkar@gmail.com"
+  // });
+
+  // var config = {
+  //   method: 'patch',
+  //   url: 'http://127.0.0.1:3000/api/v1/users/',
+  //   headers: {
+  //     'Content-Type': 'application/json'
+  //   },
+  //   data : data
+  // };
+
+  const SendOrder = async () => {
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   return (
     <View
@@ -42,7 +72,19 @@ export default function FillOrder({route, navigation}) {
           mode="outlined"
           onChangeText={text => setQty(text)}
           style={{width: '80%', height: 45, alignSelf: 'center'}}
+          onBlur={() => setAmount(qty * details.rate)}
         />
+        <View
+          style={{
+            flexDirection: 'row',
+            margin: '10%',
+            alignSelf: 'center',
+          }}>
+          <Text style={{fontSize: 25}}>Total Price : </Text>
+          <Text style={{fontSize: 25}}>
+            {'\u20B9'} {route.params.rate * qty}
+          </Text>
+        </View>
       </View>
       <Button
         style={{alignSelf: 'center', marginHorizontal: '10%'}}

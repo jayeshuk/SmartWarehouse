@@ -10,12 +10,12 @@ import WareDetail from '../screens/farmer-screens/WareDetail';
 import FillOrder from '../screens/farmer-screens/FillOrder';
 
 import StoredGoods from '../screens/farmer-screens/StoredGoods';
-import Settings from '../screens/farmer-screens/Settings';
+import Logout from '../screens/Logout';
 
 const {Navigator, Screen} = createDrawerNavigator();
 const S = createStackNavigator();
 
-function Home() {
+function StackOne() {
   return (
     <S.Navigator
       initialRouteName="HomeScreen"
@@ -27,15 +27,15 @@ function Home() {
   );
 }
 
-export default function FarmerNav({navigation}) {
+export default function FarmerNav() {
   return (
     <Navigator
       drawerContentOptions={{itemStyle: {marginVertical: 5}}}
       initialRouteName="Home"
       screenOptions={{headerShown: false}}>
-      <Screen name="Home" component={Home} />
+      <Screen name="Home" component={StackOne} />
       <Screen name="My Stored Goods" component={StoredGoods} />
-      <Screen name="Settings" component={Settings} />
+      <Screen name="Settings" component={Logout} />
     </Navigator>
   );
 }

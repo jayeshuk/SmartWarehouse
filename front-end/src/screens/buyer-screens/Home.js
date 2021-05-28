@@ -51,7 +51,6 @@ export default function Home({navigation}) {
   const [searchQuery, setSearchQuery] = React.useState('');
 
   const onChangeSearch = query => setSearchQuery(query);
-  const toggleDrawer = () => navigation.toggleDrawer();
   const handlePress = content => {
     const obj = {...content};
     delete obj.handlePress;
@@ -70,9 +69,7 @@ export default function Home({navigation}) {
           style={{marginHorizontal: '5%', marginTop: '5%'}}
           placeholder="Search Warehouse"
           onChangeText={onChangeSearch}
-          onIconPress={toggleDrawer}
           value={searchQuery}
-          icon="menu"
         />
       </View>
       <ScrollView>

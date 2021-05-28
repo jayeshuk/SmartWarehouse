@@ -9,9 +9,12 @@ import {
   List,
   Caption,
   Button,
+  Snackbar,
 } from 'react-native-paper';
 import DropDown from 'react-native-paper-dropdown';
 import {PieChart, StackedBarChart} from 'react-native-chart-kit';
+import {useSelector, useDispatch} from 'react-redux';
+import axios from 'axios';
 
 const screenWidth = Dimensions.get('window').width;
 const stackdata = {
@@ -86,8 +89,55 @@ const chartConfig = {
 };
 
 export default function MySpace() {
+  const [visible, setVisible] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
   const [warehouse, setWarehouse] = useState();
+  const [name, setName] = useState();
+  const [address, setAddress] = useState();
+  const [availableSpace, setAvailableSpace] = useState();
+  const [totalSpace, setTotalSpace] = useState();
+  const [rate, setRate] = useState();
+  const [newWareId, setNewWareId] = useState();
+  const logged_user = useSelector(state => state.main_app.logged_user);
+
+  var data = JSON.stringify({
+    name: name,
+    address: address,
+    space_available: availableSpace,
+    total_space: totalSpace,
+    rate: rate,
+    wareowner_id: logged_user.id,
+  });
+
+  var config = {
+    method: 'post',
+    url: 'http://192.168.43.132:3000/api/v1/warehouses/',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: data,
+  };
+
+  const AddWarehouse = async () => {
+    await axios(config)
+      .then(async function (response) {
+        console.log(JSON.stringify(response.data));
+        await setNewWareId(response.data.data.warehouse._id);
+        setVisible(true);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const clearFields = () => {
+    setName('');
+    setAddress('');
+    setAvailableSpace('');
+    setTotalSpace('');
+    setRate('');
+  };
+
   const warehouseList = [
     {label: 'Warehouse - 1', value: 'Warehouse - 1'},
     {label: 'Warehouse - 2', value: 'Warehouse - 2'},
@@ -202,25 +252,62 @@ export default function MySpace() {
             label="Warehouse Name"
             mode="outlined"
             style={{height: 50}}
-            // value={text}
-            // onChangeText={text => setText(text)}
+            value={name}
+            onChangeText={text => setName(text)}
+          />
+          <TextInput
+            label="Address"
+            mode="outlined"
+            style={{height: 50}}
+            value={address}
+            onChangeText={text => setAddress(text)}
+          />
+          <TextInput
+            label="Available Space in Sqft."
+            mode="outlined"
+            style={{height: 50}}
+            value={availableSpace}
+            onChangeText={text => setAvailableSpace(text)}
           />
           <TextInput
             label="Total Space in Sqft."
             mode="outlined"
             style={{height: 50}}
-            // value={text}
-            // onChangeText={text => setText(text)}
+            value={totalSpace}
+            onChangeText={text => setTotalSpace(text)}
+          />
+          <TextInput
+            label="Rate per Sqft."
+            mode="outlined"
+            style={{height: 50}}
+            value={rate}
+            onChangeText={text => setRate(text)}
           />
           <Button
             icon="plus"
             mode="contained"
             style={{margin: '5%'}}
-            onPress={() => console.log('Pressed')}>
+            onPress={() => {
+              AddWarehouse();
+              clearFields();
+            }}>
             Add New Warehouse
           </Button>
         </View>
       </ScrollView>
+      <Snackbar
+        visible={visible}
+        onDismiss={() => setVisible(!visible)}
+        style={{width: '80%', alignSelf: 'center', marginVertical: '10%'}}
+        duration={2000}
+        action={{
+          label: 'Ok',
+          onPress: () => {
+            setVisible(!visible);
+          },
+        }}>
+        Warehouse Added Successfully!
+      </Snackbar>
     </Provider>
   );
 }

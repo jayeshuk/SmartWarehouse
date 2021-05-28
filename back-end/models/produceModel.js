@@ -21,6 +21,9 @@ const produceSchema = new mongoose.Schema({
   wareowner_id: {
     type: mongoose.ObjectId,
   },
+  owner_contact: {
+    type: Number,
+  },
 });
 
 const Produce = mongoose.model("Produce", produceSchema);

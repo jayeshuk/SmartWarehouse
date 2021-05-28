@@ -1,6 +1,13 @@
 import React from 'react';
 import {View, Text, Image} from 'react-native';
-import {Avatar, Button, Card, Title, Paragraph} from 'react-native-paper';
+import {
+  Avatar,
+  Button,
+  Card,
+  Title,
+  Paragraph,
+  Headline,
+} from 'react-native-paper';
 
 export default function WareDetail({route, navigation}) {
   console.log(route.params);
@@ -26,9 +33,23 @@ export default function WareDetail({route, navigation}) {
       <Button
         style={{width: '30%', alignSelf: 'center', margin: '5%'}}
         mode="contained"
-        onPress={() => navigation.navigate('FillOrder')}>
+        onPress={() =>
+          navigation.navigate('FillOrder', {
+            rate: details.rate,
+            ware_id: details.id,
+          })
+        }>
         BOOK
       </Button>
+      <View>
+        <Text style={{fontSize: 20, margin: '2%', marginLeft: '5%'}}>
+          Rate of Storage: {'\u20B9'}
+          {details.rate} per Sqft.
+        </Text>
+        <Text style={{fontSize: 20, margin: '2%', marginLeft: '5%'}}>
+          Space Available: {details.freespace} Sqft.
+        </Text>
+      </View>
     </View>
   );
 }

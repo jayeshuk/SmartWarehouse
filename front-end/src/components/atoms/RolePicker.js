@@ -5,17 +5,17 @@ const radioButtonsData = [
   {
     id: '1', // acts as primary key, should be unique and non-empty string
     label: 'Farmer',
-    value: 'option1',
+    value: 'farmer',
   },
   {
     id: '2',
     label: 'Warehouse Owner',
-    value: 'option2',
+    value: 'warehouseowner',
   },
   {
     id: '3',
     label: 'Buyer',
-    value: 'option3',
+    value: 'buyer',
   },
 ];
 

@@ -1,4 +1,5 @@
 const Warehouse = require("../models/warehouseModel");
+const User = require("../models/userModel");
 const catchAsync = require("../../utils/catchAsync");
 const AppError = require("../../utils/appError");
 
@@ -18,6 +19,11 @@ exports.createWarehouse = catchAsync(async (req, res, next) => {
   console.log("Warehouse Body:", req.body);
 
   const newWarehouse = await Warehouse.create(req.body);
+  const updateOwner = await User.findById(req.body.wareowner_id);
+
+  updateOwner.container.push(newWarehouse._id);
+  await updateOwner.save();
+
   res.status(201).json({
     status: "success",
     data: {

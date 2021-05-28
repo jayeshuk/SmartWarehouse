@@ -4,7 +4,7 @@ import {BottomNavigation} from 'react-native-paper';
 
 import Home from './Home';
 import MySpace from './MySpace';
-import Logout from './Logout';
+import Logout from '../Logout';
 
 export default function BottomNav() {
   const [index, setIndex] = React.useState(0);
