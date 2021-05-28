@@ -8,6 +8,7 @@ const initialState = {
     id: '',
     role: '',
     address: '',
+    container: [],
   },
 };
 
@@ -21,6 +22,7 @@ const main_app = (state = initialState, action) => {
         newState.logged_user.id = action.payload.id;
         newState.logged_user.role = action.payload.role;
         newState.logged_user.address = action.payload.address;
+        newState.logged_user.container = action.payload.container;
 
         // console.log(newState);
       });
@@ -33,6 +35,7 @@ const main_app = (state = initialState, action) => {
         newState.logged_user.id = '';
         newState.logged_user.role = '';
         newState.logged_user.address = '';
+        newState.logged_user.container = [];
 
         // console.log(newState);
       });

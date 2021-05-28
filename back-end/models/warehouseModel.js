@@ -22,6 +22,10 @@ const warehouseSchema = new mongoose.Schema({
   wareowner_id: {
     type: mongoose.ObjectId,
   },
+  container: {
+    type: Array,
+    default: [],
+  },
 });
 
 const Warehouse = mongoose.model("Warehouse", warehouseSchema);

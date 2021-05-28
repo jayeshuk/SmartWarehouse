@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, ScrollView, Dimensions} from 'react-native';
 import {
   Headline,
@@ -11,18 +11,18 @@ import {
   Button,
   Snackbar,
 } from 'react-native-paper';
+import {logUser} from '../../redux-store/actions';
+import {useSelector, useDispatch} from 'react-redux';
 import DropDown from 'react-native-paper-dropdown';
 import {PieChart, StackedBarChart} from 'react-native-chart-kit';
-import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 
 const screenWidth = Dimensions.get('window').width;
 const stackdata = {
-  labels: ['Jan', 'Feb', 'March', 'April', 'May'],
+  labels: ['Feb', 'March', 'April', 'May'],
   legend: ['L1', 'L2', 'L3'],
   data: [
     [60, 60, 60],
-    [30, 30, 60],
     [20, 40, 60],
     [50, 50, 20],
     [15, 20, 20],
@@ -97,8 +97,14 @@ export default function MySpace() {
   const [availableSpace, setAvailableSpace] = useState();
   const [totalSpace, setTotalSpace] = useState();
   const [rate, setRate] = useState();
-  const [newWareId, setNewWareId] = useState();
+  const [warehouseList, setWarehouseList] = useState([]);
+  const [dropdownList, setDropdownList] = useState([]);
+  const [pieData, setPieData] = useState('');
+  const [stackData, setStackData] = useState('');
+  const [displaySpace, setDisplaySpace] = useState(0);
   const logged_user = useSelector(state => state.main_app.logged_user);
+  const dispatch = useDispatch();
+  const LogUser = logindata => dispatch(logUser(logindata));
 
   var data = JSON.stringify({
     name: name,
@@ -122,7 +128,12 @@ export default function MySpace() {
     await axios(config)
       .then(async function (response) {
         console.log(JSON.stringify(response.data));
-        await setNewWareId(response.data.data.warehouse._id);
+        if (response.data.status === 'success') {
+          LogUser({
+            ...logged_user,
+            container: response.data.data.user.container,
+          });
+        }
         setVisible(true);
       })
       .catch(function (error) {
@@ -138,11 +149,35 @@ export default function MySpace() {
     setRate('');
   };
 
-  const warehouseList = [
-    {label: 'Warehouse - 1', value: 'Warehouse - 1'},
-    {label: 'Warehouse - 2', value: 'Warehouse - 2'},
-    {label: 'Warehouse - 3', value: 'Warehouse - 3'},
-  ];
+  var load_config = {
+    method: 'get',
+    url: `http://192.168.43.132:3000/api/v1/warehouses/${logged_user.id}`,
+    headers: {},
+  };
+
+  const LoadWarehouses = async () => {
+    await axios(load_config)
+      .then(function (response) {
+        var temp = response.data.data.warehouses.map(obj => {
+          let ware = {
+            label: obj.name,
+            value: obj.name,
+            total_space: obj.total_space,
+          };
+
+          return ware;
+        });
+        setDropdownList(temp);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    LoadWarehouses();
+  }, [logged_user.container]);
+
   return (
     <Provider>
       <View>
@@ -152,8 +187,18 @@ export default function MySpace() {
             label={'Select Warehouse'}
             mode={'outlined'}
             value={warehouse}
-            setValue={setWarehouse}
-            list={warehouseList}
+            setValue={async text => {
+              setWarehouse(text);
+              dropdownList.filter(obj => {
+                if (obj.label === text) {
+                  console.log('HELLO SELECTED WARE', obj.value);
+                  setDisplaySpace(obj.total_space);
+                  setPieData(obj.value);
+                  setStackData(obj.value);
+                }
+              });
+            }}
+            list={dropdownList}
             visible={showDropDown}
             showDropDown={() => setShowDropDown(true)}
             onDismiss={() => setShowDropDown(false)}
@@ -170,7 +215,9 @@ export default function MySpace() {
           <Headline style={{alignSelf: 'center', marginTop: '2.5%'}}>
             {warehouse} Details
           </Headline>
-          <Text style={{alignSelf: 'center'}}>Total Space 5000 Sqft.</Text>
+          <Text style={{alignSelf: 'center'}}>
+            Total Space {displaySpace} Sqft.
+          </Text>
         </>
       ) : (
         <Text style={{alignSelf: 'center', marginTop: '2.5%'}}>

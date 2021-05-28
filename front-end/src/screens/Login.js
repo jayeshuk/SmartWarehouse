@@ -11,8 +11,8 @@ import {
 } from 'react-native-paper';
 import axios from 'react-native-axios';
 import RolePicker from '../components/atoms/RolePicker';
-import {logUser} from '../redux-store/actions';
 import jwt_decode from 'jwt-decode';
+import {logUser} from '../redux-store/actions';
 import {useSelector, useDispatch} from 'react-redux';
 import {LogBox} from 'react-native';
 import {getMaxListeners} from 'node:process';
@@ -53,7 +53,7 @@ export default function Home({navigation}) {
   };
 
   const loginByPass = () => {
-    console.log(data.role);
+    // console.log(data.role);
     if (role) {
       switch (role) {
         case 'farmer':
@@ -86,6 +86,7 @@ export default function Home({navigation}) {
             id: decoded.id,
             role: role.toLowerCase(),
             address: decoded.add,
+            container: res.data.container,
           });
         }
         loginByPass();
