@@ -9,7 +9,7 @@ const produceSchema = new mongoose.Schema({
     type: String,
     required: [true, "Produce must have quantity"],
   },
-  stored_at: {
+  warehouse_id: {
     type: mongoose.ObjectId,
   },
   farmer_id: {
@@ -21,8 +21,18 @@ const produceSchema = new mongoose.Schema({
   wareowner_id: {
     type: mongoose.ObjectId,
   },
-  owner_contact: {
+  farmer_contact: {
     type: Number,
+  },
+  owned_by: {
+    type: String,
+  },
+  storage_place: {
+    type: String,
+  },
+  accepted: {
+    type: Boolean,
+    default: false,
   },
 });
 

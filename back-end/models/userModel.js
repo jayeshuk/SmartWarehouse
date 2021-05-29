@@ -60,6 +60,10 @@ const userSchema = new mongoose.Schema({
     type: [mongoose.ObjectId],
     default: [],
   },
+  orders: {
+    type: Array,
+    default: [],
+  },
   verified: {
     type: Boolean,
     default: false,

@@ -19,26 +19,26 @@ exports.signup = catchAsync(async (req, res, next) => {
     expiresIn: "1h",
   });
 
-  const link = `http://192.168.43.132:3000/api/v1/verifies/${v_token}`;
-  console.log("Signing Up", link);
+  // const link = `http://192.168.43.132:3000/api/v1/verifies/${v_token}`;
+  // console.log("Signing Up", link);
 
-  const msg = {
-    to: `${email}`, // Change to your recipient
-    from: "s17_ukalkar_jayesh@mgmcen.ac.in", // Change to your verified sender
-    subject: "Email Verification from Smart Warehouses!",
-    html: `<h2>Hello ${firstName},</h2><br> Please Click on the link to verify your email.<br><a href=${link}>Click here to verify</a>`,
-    // html: `<h2>Hello ${} Please Click on the link to verify your email.</h2><br><a href=${link}>Click here to verify</a>`,
-  };
+  // const msg = {
+  //   to: `${email}`, // Change to your recipient
+  //   from: "s17_ukalkar_jayesh@mgmcen.ac.in", // Change to your verified sender
+  //   subject: "Email Verification from Smart Warehouses!",
+  //   html: `<h2>Hello ${firstName},</h2><br> Please Click on the link to verify your email.<br><a href=${link}>Click here to verify</a>`,
+  //   // html: `<h2>Hello ${} Please Click on the link to verify your email.</h2><br><a href=${link}>Click here to verify</a>`,
+  // };
 
-  sgMail
-    .send(msg)
-    .then(() => {
-      console.log("EMAIL SENT");
-    })
-    .catch((error) => {
-      console.log("SENDER GRID ERROR");
-      console.error(error);
-    });
+  // sgMail
+  //   .send(msg)
+  //   .then(() => {
+  //     console.log("EMAIL SENT");
+  //   })
+  //   .catch((error) => {
+  //     console.log("SENDER GRID ERROR");
+  //     console.error(error);
+  //   });
 
   const newUser = await User.create(req.body);
   console.log("User Created");

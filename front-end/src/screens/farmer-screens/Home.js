@@ -1,10 +1,11 @@
 import * as React from 'react';
 import {View, Text, ScrollView, RefreshControl} from 'react-native';
-import {Searchbar} from 'react-native-paper';
+import {Searchbar, Snackbar} from 'react-native-paper';
 import ShowWareCard from '../../components/atoms/ShowWareCard';
 import axios from 'axios';
 
 export default function Home({navigation}) {
+  const [visible, setVisible] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
@@ -92,6 +93,7 @@ export default function Home({navigation}) {
     const obj = {...content};
     delete obj.handlePress;
     navigation.navigate('WareDetail', obj);
+    console.log('WareDetail', obj);
   };
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -121,11 +123,13 @@ export default function Home({navigation}) {
               <ShowWareCard
                 key={item._id}
                 id={item._id}
+                wareowner_id={item.wareowner_id}
                 name={item.name}
                 rate={item.rate}
                 freespace={item.space_available}
                 address={item.address}
                 handlePress={handlePress}
+                setVisible={setVisible}
               />
             );
           })
@@ -137,6 +141,19 @@ export default function Home({navigation}) {
           </>
         )}
       </ScrollView>
+      <Snackbar
+        visible={visible}
+        onDismiss={() => setVisible(!visible)}
+        style={{width: '80%', alignSelf: 'center', marginVertical: '10%'}}
+        duration={2000}
+        action={{
+          label: 'Ok',
+          onPress: () => {
+            setVisible(!visible);
+          },
+        }}>
+        Order Placed !
+      </Snackbar>
     </View>
   );
 }

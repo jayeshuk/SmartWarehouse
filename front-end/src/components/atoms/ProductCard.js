@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Pressable} from 'react-native';
 import {Avatar, Button, Card, Text} from 'react-native-paper';
 
-export default function ShowWareCard(props) {
+export default function ProductCard(props) {
   let rate = props.rate;
   const LeftContent = props => <Avatar.Icon {...props} icon="seed" size={45} />;
 

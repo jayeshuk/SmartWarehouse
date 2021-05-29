@@ -39,6 +39,11 @@ export default function Home({navigation}) {
     role: 'warehouseowner',
   });
   // var data = JSON.stringify({
+  //   email: 'jayeshukalkar@gmail.com',
+  //   password: 'Jayesh@1234',
+  //   role: 'farmer',
+  // });
+  // var data = JSON.stringify({
   //   email: email,
   //   password: password,
   //   role: role.length > 0 ? role.toLowerCase() : '',

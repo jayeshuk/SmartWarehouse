@@ -1,31 +1,40 @@
 import React, {useState} from 'react';
 import {View, Text} from 'react-native';
 import {Button, Title, TextInput, Snackbar} from 'react-native-paper';
+import {useSelector, useDispatch} from 'react-redux';
+import axios from 'axios';
 
 export default function FillOrder({route, navigation}) {
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState(0);
-  const [qty, setQty] = useState(0);
+  const [phone, setPhone] = useState('');
+  const [qty, setQty] = useState('');
   const [amount, setAmount] = useState();
+  const [details, setDetails] = useState(route.params);
 
-  // route.params.wareowner_id
+  const logged_user = useSelector(state => state.main_app.logged_user);
 
-  // var data = JSON.stringify({
-  //   "role": "farmer",
-  //   "firstName": "Omkar",
-  //   "lastName": "Kadam",
-  //   "phone": 9132855182,
-  //   "email": "jayeshukalkar@gmail.com"
-  // });
+  console.log('Inside Fill Order', route.params);
 
-  // var config = {
-  //   method: 'patch',
-  //   url: 'http://127.0.0.1:3000/api/v1/users/',
-  //   headers: {
-  //     'Content-Type': 'application/json'
-  //   },
-  //   data : data
-  // };
+  // route.params.ware_id
+
+  var data = JSON.stringify({
+    name: name,
+    quantity: qty,
+    amount: amount,
+    farmer_phone: phone,
+    farmer_id: logged_user.id,
+    wareowner_id: details.wareowner_id,
+    warehouse_id: details.id,
+  });
+
+  var config = {
+    method: 'patch',
+    url: `http://192.168.43.132:3000/api/v1/users/sendorder/${details.wareowner_id}`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: data,
+  };
 
   const SendOrder = async () => {
     await axios(config)
@@ -72,7 +81,7 @@ export default function FillOrder({route, navigation}) {
           mode="outlined"
           onChangeText={text => setQty(text)}
           style={{width: '80%', height: 45, alignSelf: 'center'}}
-          onBlur={() => setAmount(qty * details.rate)}
+          onBlur={() => setAmount(qty * route.params.rate)}
         />
         <View
           style={{
@@ -92,11 +101,26 @@ export default function FillOrder({route, navigation}) {
         // contentStyle={{flexDirection: 'row-reverse'}}
         mode="contained"
         onPress={() => {
-          // route.params.setVisible(!visible);
+          navigation.goBack();
+          navigation.goBack();
+          SendOrder();
+          details.setVisible(true);
+        }}>
+        Book Space
+      </Button>
+      <Button
+        style={{
+          alignSelf: 'center',
+          marginHorizontal: '10%',
+          marginVertical: '5%',
+        }}
+        labelStyle={{fontSize: 18}}
+        mode="text"
+        onPress={() => {
           navigation.goBack();
           navigation.goBack();
         }}>
-        Book Space
+        Cancel
       </Button>
     </View>
   );

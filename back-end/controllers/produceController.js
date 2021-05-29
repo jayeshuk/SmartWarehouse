@@ -1,11 +1,25 @@
 const Produce = require("../models/produceModel");
+const User = require("../models/userModel");
+const Warehouse = require("../models/warehouseModel");
 const catchAsync = require("../../utils/catchAsync");
 const AppError = require("../../utils/appError");
 
 exports.createProduce = catchAsync(async (req, res, next) => {
   console.log("Produce Body:", req.body);
+  const newProduce = await Produce.findById(req.body.details._id);
+  newProduce.accepted = true;
+  await newProduce.save();
 
-  const newProduce = await Produce.create(req.body);
+  const updateOwner = await User.findById(req.body.details.farmer_id);
+  const updateWarehouse = await Warehouse.findById(
+    req.body.details.warehouse_id
+  );
+
+  updateWarehouse.container.push(newProduce._id);
+  await updateWarehouse.save();
+  updateOwner.container.push(newProduce._id);
+  await updateOwner.save();
+
   res.status(201).json({
     status: "success",
     data: {

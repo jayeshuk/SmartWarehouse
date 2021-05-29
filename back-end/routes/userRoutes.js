@@ -6,7 +6,8 @@ const router = express.Router();
 router.post("/signup", authController.signup);
 router.post("/login", authController.login);
 
-// router.route("/").post(userController.createUser);
+router.route("/sendorder/:id").patch(userController.addOrder);
+router.route("/loadorder/:id").post(userController.loadOrder);
 
 router
   .route("/:id")

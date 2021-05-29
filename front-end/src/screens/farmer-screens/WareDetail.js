@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, Image} from 'react-native';
 import {
   Avatar,
@@ -11,7 +11,7 @@ import {
 
 export default function WareDetail({route, navigation}) {
   console.log(route.params);
-  const details = route.params;
+  const [details, setDetails] = useState(route.params);
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <View style={{margin: '5%'}}>
@@ -33,12 +33,7 @@ export default function WareDetail({route, navigation}) {
       <Button
         style={{width: '30%', alignSelf: 'center', margin: '5%'}}
         mode="contained"
-        onPress={() =>
-          navigation.navigate('FillOrder', {
-            rate: details.rate,
-            ware_id: details.id,
-          })
-        }>
+        onPress={() => navigation.navigate('FillOrder', details)}>
         BOOK
       </Button>
       <View>
