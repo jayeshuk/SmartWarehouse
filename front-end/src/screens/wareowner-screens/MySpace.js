@@ -99,9 +99,10 @@ export default function MySpace() {
   const [rate, setRate] = useState();
   const [warehouseList, setWarehouseList] = useState([]);
   const [dropdownList, setDropdownList] = useState([]);
-  const [pieData, setPieData] = useState('');
+  const [pieData, setPieData] = useState([]);
   const [stackData, setStackData] = useState('');
   const [displaySpace, setDisplaySpace] = useState(0);
+  const [produceIds, setProduceIds] = useState([]);
   const logged_user = useSelector(state => state.main_app.logged_user);
   const dispatch = useDispatch();
   const LogUser = logindata => dispatch(logUser(logindata));
@@ -162,12 +163,33 @@ export default function MySpace() {
           let ware = {
             label: obj.name,
             value: obj.name,
+            arr: obj.container,
             total_space: obj.total_space,
           };
 
           return ware;
         });
         setDropdownList(temp);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  var call_config = {
+    method: 'post',
+    url: 'http://192.168.43.132:3000/api/v1/produces/call/',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: produceIds,
+  };
+
+  const CallProduces = async () => {
+    await axios(call_config)
+      .then(async function (response) {
+        await setPieData(response.data.data.storedProduces);
+        console.log('CALLED PRODUCE', pieData);
       })
       .catch(function (error) {
         console.log(error);
@@ -187,14 +209,15 @@ export default function MySpace() {
             label={'Select Warehouse'}
             mode={'outlined'}
             value={warehouse}
-            setValue={async text => {
+            setValue={text => {
               setWarehouse(text);
-              dropdownList.filter(obj => {
+              dropdownList.filter(async obj => {
                 if (obj.label === text) {
-                  console.log('HELLO SELECTED WARE', obj.value);
+                  console.log('HELLO SELECTED WARE', obj.arr);
                   setDisplaySpace(obj.total_space);
-                  setPieData(obj.value);
-                  setStackData(obj.value);
+                  await setProduceIds(obj.arr);
+                  CallProduces();
+                  // setStackData(obj.value);
                 }
               });
             }}
@@ -265,7 +288,7 @@ export default function MySpace() {
                 Last Updated : 15 May 2021, 22:59:00
               </Caption>
             </View>
-            <View style={{marginTop: '5%'}}>
+            {/* <View style={{marginTop: '5%'}}>
               <Subheading
                 style={{
                   marginHorizontal: '5%',
@@ -288,7 +311,7 @@ export default function MySpace() {
               <Caption style={{alignSelf: 'center'}}>
                 Last Updated : 15 May 2021, 22:59:00
               </Caption>
-            </View>
+            </View> */}
           </>
         ) : (
           <></>

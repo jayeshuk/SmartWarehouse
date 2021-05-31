@@ -3,6 +3,8 @@ const produceController = require("../controllers/produceController");
 
 const router = express.Router();
 
+router.route("/call").post(produceController.callStoredProduces);
+
 router
   .route("/")
   .get(produceController.getAllProduces)

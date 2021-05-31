@@ -39,26 +39,28 @@ export default function Home() {
   }, []);
 
   return (
-    <View style={{flex: 1, justifyContent: 'center'}}>
-      {pendingOrders.length > 0 ? (
-        <ScrollView
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }>
-          {pendingOrders.map((item, index) => {
-            return (
-              <OrderCard
-                key={item._id}
-                name={item.name}
-                storage_place={item.storage_place}
-                details={item}
-              />
-            );
-          })}
-        </ScrollView>
-      ) : (
-        <Title style={{alignSelf: 'center'}}>No Space Requests so far.</Title>
-      )}
+    <View style={{flex: 1}}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
+        {pendingOrders.length > 0 ? (
+          <>
+            {pendingOrders.map((item, index) => {
+              return (
+                <OrderCard
+                  key={item._id}
+                  name={item.name}
+                  storage_place={item.storage_place}
+                  details={item}
+                />
+              );
+            })}
+          </>
+        ) : (
+          <Title style={{alignSelf: 'center'}}>No Space Requests so far.</Title>
+        )}
+      </ScrollView>
     </View>
   );
 }
