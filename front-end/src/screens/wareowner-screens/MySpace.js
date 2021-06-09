@@ -189,7 +189,7 @@ export default function MySpace() {
 
   // var call_config = {
   //   method: 'post',
-  //   url: 'http://192.168.43.132:3000/api/v1/produces/call/',
+  //   url: 'http://192.168.0.108:3000/api/v1/produces/call/',
   //   headers: {
   //     'Content-Type': 'application/json',
   //   },
@@ -199,7 +199,7 @@ export default function MySpace() {
   const CallProduces = async (arr, total, free, update_time) => {
     await axios({
       method: 'post',
-      url: 'http://192.168.43.132:3000/api/v1/produces/call/',
+      url: 'http://192.168.0.108:3000/api/v1/produces/call/',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -247,7 +247,7 @@ export default function MySpace() {
             value={warehouse}
             setValue={text => {
               setWarehouse(text);
-              dropdownList.filter(async obj => {
+              dropdownList.map(async obj => {
                 if (obj.label === text) {
                   console.log('HELLO SELECTED WARE', obj.arr);
                   setDisplaySpace(obj.total_space);
