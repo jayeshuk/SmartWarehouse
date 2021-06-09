@@ -19,7 +19,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     expiresIn: "1h",
   });
 
-  // const link = `http://192.168.0.108:3000/api/v1/verifies/${v_token}`;
+  // const link = `http://192.168.43.132:3000/api/v1/verifies/${v_token}`;
   // console.log("Signing Up", link);
 
   // const msg = {
