@@ -46,7 +46,7 @@ export default function Register({route, navigation}) {
   });
   var config = {
     method: 'post',
-    url: 'http://192.168.0.108:3000/api/v1/users/signup',
+    url: 'http://192.168.43.132:3000/api/v1/users/signup',
     headers: {
       'Content-Type': 'application/json',
     },

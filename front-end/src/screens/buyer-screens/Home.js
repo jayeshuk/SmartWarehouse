@@ -1,9 +1,16 @@
 import * as React from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text, ScrollView, RefreshControl} from 'react-native';
 import {Searchbar} from 'react-native-paper';
 import ProductCard from '../../components/atoms/ProductCard';
 
 export default function Home({navigation}) {
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    //Load The THings Again
+    setTimeout(() => setRefreshing(false), 2000);
+  }, []);
+
   const products = [
     {
       id: 0,
@@ -72,7 +79,10 @@ export default function Home({navigation}) {
           value={searchQuery}
         />
       </View>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         {products.map((item, index) => {
           return (
             <ProductCard

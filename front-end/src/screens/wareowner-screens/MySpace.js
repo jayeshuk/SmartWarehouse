@@ -127,7 +127,7 @@ export default function MySpace() {
 
   var config = {
     method: 'post',
-    url: 'http://192.168.0.108:3000/api/v1/warehouses/',
+    url: 'http://192.168.43.132:3000/api/v1/warehouses/',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -161,7 +161,7 @@ export default function MySpace() {
 
   var load_config = {
     method: 'get',
-    url: `http://192.168.0.108:3000/api/v1/warehouses/${logged_user.id}`,
+    url: `http://192.168.43.132:3000/api/v1/warehouses/${logged_user.id}`,
     headers: {},
   };
 
@@ -247,7 +247,7 @@ export default function MySpace() {
             value={warehouse}
             setValue={text => {
               setWarehouse(text);
-              dropdownList.filter(async obj => {
+              dropdownList.map(async obj => {
                 if (obj.label === text) {
                   console.log('HELLO SELECTED WARE', obj.arr);
                   setDisplaySpace(obj.total_space);
