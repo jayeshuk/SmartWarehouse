@@ -79,7 +79,7 @@ export default function OrderCard(props) {
                 style={{backgroundColor: '#49e372'}}
                 mode="contained"
                 onPress={() => {
-                  // BookSpace();
+                  BookSpace();
                   setAccept(true);
                 }}>
                 Accept
