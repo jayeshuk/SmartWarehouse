@@ -102,10 +102,19 @@ export default function MySpace() {
   const [pieData, setPieData] = useState([]);
   const [stackData, setStackData] = useState('');
   const [displaySpace, setDisplaySpace] = useState(0);
-  const [produceIds, setProduceIds] = useState([]);
+  const [lastUpdate, setLastUpdate] = useState();
   const logged_user = useSelector(state => state.main_app.logged_user);
   const dispatch = useDispatch();
   const LogUser = logindata => dispatch(logUser(logindata));
+
+  function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
 
   var data = JSON.stringify({
     name: name,
@@ -165,6 +174,8 @@ export default function MySpace() {
             value: obj.name,
             arr: obj.container,
             total_space: obj.total_space,
+            free_space: obj.space_available,
+            last_update: obj.last_update,
           };
 
           return ware;
@@ -176,20 +187,45 @@ export default function MySpace() {
       });
   };
 
-  var call_config = {
-    method: 'post',
-    url: 'http://192.168.43.132:3000/api/v1/produces/call/',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: produceIds,
-  };
+  // var call_config = {
+  //   method: 'post',
+  //   url: 'http://192.168.43.132:3000/api/v1/produces/call/',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   data: produceIds,
+  // };
 
-  const CallProduces = async () => {
-    await axios(call_config)
+  const CallProduces = async (arr, total, free, update_time) => {
+    await axios({
+      method: 'post',
+      url: 'http://192.168.43.132:3000/api/v1/produces/call/',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: arr,
+    })
       .then(async function (response) {
-        await setPieData(response.data.data.storedProduces);
-        console.log('CALLED PRODUCE', pieData);
+        var p_data = response.data.data.storedProduces;
+        setLastUpdate(update_time);
+        if (p_data.length > 0) {
+          p_data.push({name: 'Free Space', quantity: Number(free)});
+        } else {
+          p_data.push({name: 'Free Space', quantity: Number(total)});
+        }
+        p_data.forEach(p => {
+          if (p.name === 'Free Space') {
+            p.color = '#c7c7c7';
+          } else {
+            // p.color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+            p.color = getRandomColor();
+          }
+          p.legendFontColor = '#7F7F7F';
+          p.legendFontSize = 15;
+          p.quantity = Number(p.quantity);
+        });
+        setPieData(p_data);
+        console.log('CALLED PRODUCE', JSON.stringify(p_data));
       })
       .catch(function (error) {
         console.log(error);
@@ -215,8 +251,12 @@ export default function MySpace() {
                 if (obj.label === text) {
                   console.log('HELLO SELECTED WARE', obj.arr);
                   setDisplaySpace(obj.total_space);
-                  await setProduceIds(obj.arr);
-                  CallProduces();
+                  CallProduces(
+                    obj.arr,
+                    obj.total_space,
+                    obj.free_space,
+                    obj.last_update,
+                  );
                   // setStackData(obj.value);
                 }
               });
@@ -271,11 +311,11 @@ export default function MySpace() {
                 Current Occupancy
               </Subheading>
               <PieChart
-                data={piedata}
+                data={pieData}
                 width={screenWidth}
                 height={250}
                 chartConfig={chartConfig}
-                accessor={'population'}
+                accessor={'quantity'}
                 backgroundColor={'transparent'}
                 paddingLeft={'15'}
                 center={[10, 10]}
@@ -285,7 +325,7 @@ export default function MySpace() {
                 bgColor={'red'}
               />
               <Caption style={{alignSelf: 'center'}}>
-                Last Updated : 15 May 2021, 22:59:00
+                Last Updated : {lastUpdate}
               </Caption>
             </View>
             {/* <View style={{marginTop: '5%'}}>

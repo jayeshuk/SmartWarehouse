@@ -16,6 +16,8 @@ exports.createProduce = catchAsync(async (req, res, next) => {
   );
 
   updateWarehouse.container.push(newProduce._id);
+  updateWarehouse.space_available -= newProduce.quantity;
+  updateWarehouse.last_update = new Date().toString().slice(0, 25) + "IST";
   await updateWarehouse.save();
   updateOwner.container.push(newProduce._id);
   await updateOwner.save();
@@ -43,6 +45,7 @@ exports.getAllProduces = catchAsync(async (req, res, next) => {
 
 exports.callStoredProduces = catchAsync(async (req, res, next) => {
   const storedProduces = await Produce.find({ _id: { $in: req.body } });
+  console.log("Inside CallStoredProduces  : ", storedProduces);
 
   res.status(200).json({
     status: "success",

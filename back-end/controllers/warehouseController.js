@@ -19,7 +19,10 @@ exports.getAllWarehouses = catchAsync(async (req, res, next) => {
 exports.createWarehouse = catchAsync(async (req, res, next) => {
   console.log("Warehouse Body:", req.body);
 
-  const newWarehouse = await Warehouse.create(req.body);
+  const newWarehouse = await Warehouse.create({
+    ...req.body,
+    last_update: new Date().toString().slice(0, 25) + "IST",
+  });
   const updateOwner = await User.findById(req.body.wareowner_id);
 
   updateOwner.container.push(mongoose.Types.ObjectId(newWarehouse._id));
@@ -53,10 +56,10 @@ exports.updateWarehouse = catchAsync(async (req, res, next) => {
 
   // Add CurrentOccupancy (PieData)
   // Add PastData along with (StackData)
-  const updatedWare = await Warehouse.findByIdAndUpdate(
-    req.params.id,
-    req.body
-  );
+  const updatedWare = await Warehouse.findByIdAndUpdate(req.params.id, {
+    ...req.body,
+    last_update: new Date().toString().slice(0, 25) + "IST",
+  });
 
   res.status(200).json({
     status: "success",

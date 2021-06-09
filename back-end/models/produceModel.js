@@ -6,7 +6,7 @@ const produceSchema = new mongoose.Schema({
     required: [true, "Produce must have a name"],
   },
   quantity: {
-    type: String,
+    type: Number,
     required: [true, "Produce must have quantity"],
   },
   warehouse_id: {

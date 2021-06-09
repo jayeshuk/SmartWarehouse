@@ -5,6 +5,7 @@ import axios from 'axios';
 
 export default function OrderCard(props) {
   const [accept, setAccept] = useState(false);
+  const [reject, setReject] = useState(false);
 
   const LeftContent = props => (
     <Avatar.Icon {...props} icon="package-up" size={45} />
@@ -50,15 +51,51 @@ export default function OrderCard(props) {
             subtitleStyle={{marginBottom: '5%'}}
           />
         </Card.Content>
-        <Button
-          mode="contained"
-          onPress={() => {
-            BookSpace();
-            setAccept(true);
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            padding: '5%',
           }}>
-          {accept ? 'Request Accepted' : 'Accept'}
-        </Button>
-
+          {accept || reject ? (
+            accept ? (
+              <Button
+                icon="check-bold"
+                style={{backgroundColor: '#49e372'}}
+                mode="contained">
+                Request Accepted
+              </Button>
+            ) : (
+              <Button
+                icon="close"
+                style={{backgroundColor: '#fa5ab2'}}
+                mode="contained">
+                Request Rejected
+              </Button>
+            )
+          ) : (
+            <>
+              <Button
+                style={{backgroundColor: '#49e372'}}
+                mode="contained"
+                onPress={() => {
+                  // BookSpace();
+                  setAccept(true);
+                }}>
+                Accept
+              </Button>
+              <Button
+                style={{backgroundColor: '#fa5ab2'}}
+                mode="contained"
+                onPress={() => {
+                  // BookSpace();
+                  setReject(true);
+                }}>
+                Reject
+              </Button>
+            </>
+          )}
+        </View>
         {/* While If Rejected, delete the produce from produce Collection and wareowner orders array. */}
       </Pressable>
     </Card>

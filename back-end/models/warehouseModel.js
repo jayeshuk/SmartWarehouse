@@ -11,6 +11,7 @@ const warehouseSchema = new mongoose.Schema({
   },
   space_available: {
     type: Number,
+    default: this.total_space,
   },
   total_space: {
     type: Number,
@@ -25,6 +26,9 @@ const warehouseSchema = new mongoose.Schema({
   container: {
     type: Array,
     default: [],
+  },
+  last_update: {
+    type: String,
   },
 });
 
