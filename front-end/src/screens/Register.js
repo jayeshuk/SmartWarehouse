@@ -87,7 +87,19 @@ export default function Register({route, navigation}) {
 
     confirmPassword.value === password.value ? setMatch(true) : setMatch(false);
 
-    // console.log(`C1 ${c1} C2 ${c2} C3${c3} C4${c4} C5${c5} C6 ${c6}`);
+    if (
+      match &&
+      firstName.isValid &&
+      lastName.isValid &&
+      phone.isValid &&
+      email.isValid &&
+      password.isValid &&
+      confirmPassword.isValid
+    ) {
+      onRegister();
+      navigation.goBack();
+      route.params.setVisible(true);
+    }
   };
 
   return (
@@ -202,10 +214,7 @@ export default function Register({route, navigation}) {
         // contentStyle={{flexDirection: 'row-reverse'}}
         mode="contained"
         onPress={() => {
-          // navigation.goBack();
           ValidateFields();
-          onRegister();
-          route.params.setVisible(true);
         }}>
         Register
       </Button>
