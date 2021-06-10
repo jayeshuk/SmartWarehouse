@@ -33,16 +33,16 @@ export default function Home({navigation}) {
     setRole(n[0].value);
   };
 
-  var data = JSON.stringify({
-    email: 'hariomlapshetwar@gmail.com',
-    password: 'Jayesh@1234',
-    role: 'warehouseowner',
-  });
   // var data = JSON.stringify({
-  //   email: 'jayeshukalkar@gmail.com',
+  //   email: 'hariomlapshetwar@gmail.com',
   //   password: 'Jayesh@1234',
-  //   role: 'farmer',
+  //   role: 'warehouseowner',
   // });
+  var data = JSON.stringify({
+    email: 'jayeshukalkar@gmail.com',
+    password: 'Jayesh@1234',
+    role: 'farmer',
+  });
   // var data = JSON.stringify({
   //   email: email,
   //   password: password,

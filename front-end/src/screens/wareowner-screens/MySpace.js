@@ -217,11 +217,16 @@ export default function MySpace() {
         } else {
           if (total === free)
             p_data.push({name: 'Free Space', quantity: Number(total)});
-          else if (free < total)
+          else if (free < total) {
             p_data.push({
               name: 'Preoccupied',
               quantity: Number(total) - Number(free),
             });
+            p_data.push({
+              name: 'Free Space',
+              quantity: Number(free),
+            });
+          }
         }
         p_data.forEach(p => {
           if (p.name === 'Free Space') {
