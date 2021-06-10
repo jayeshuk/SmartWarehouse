@@ -74,18 +74,20 @@ export default function Register({route, navigation}) {
   let regEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   let regPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{6,15}$/;
 
-  const ValidateFields = type => {
-    setFirstName({...firstName, isValid: regName.test(firstName.value)});
-    setLastName({...lastName, isValid: regName.test(lastName.value)});
-    setPhone({...phone, isValid: regPhone.test(phone.value)});
-    setEmail({...email, isValid: regEmail.test(email.value)});
-    setPassword({...password, isValid: regPass.test(password.value)});
+  const ValidateFields = async type => {
+    await setFirstName({...firstName, isValid: regName.test(firstName.value)});
+    await setLastName({...lastName, isValid: regName.test(lastName.value)});
+    await setPhone({...phone, isValid: regPhone.test(phone.value)});
+    await setEmail({...email, isValid: regEmail.test(email.value)});
+    await setPassword({...password, isValid: regPass.test(password.value)});
     setConfirmPassword({
       ...confirmPassword,
       isValid: regPass.test(confirmPassword.value),
     });
 
-    confirmPassword.value === password.value ? setMatch(true) : setMatch(false);
+    confirmPassword.value === password.value
+      ? await setMatch(true)
+      : await setMatch(false);
 
     if (
       match &&
@@ -93,8 +95,7 @@ export default function Register({route, navigation}) {
       lastName.isValid &&
       phone.isValid &&
       email.isValid &&
-      password.isValid &&
-      confirmPassword.isValid
+      password.isValid
     ) {
       onRegister();
       navigation.goBack();
