@@ -50,7 +50,7 @@ export default function Home({navigation}) {
   // });
   var config = {
     method: 'post',
-    url: 'http://192.168.43.132:3000/api/v1/users/login',
+    url: 'http://192.168.0.108:3000/api/v1/users/login',
     headers: {
       'Content-Type': 'application/json',
     },
