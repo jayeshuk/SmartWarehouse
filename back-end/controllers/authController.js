@@ -7,20 +7,20 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const signToken = (obj) => {
-  let { id, add } = obj;
-  return jwt.sign({ id, add }, process.env.JWT_SECRET);
+  let { id, phn } = obj;
+  return jwt.sign({ id, phn }, process.env.JWT_SECRET);
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
   console.log(req.body);
   const { firstName, email, password } = req.body;
 
-  const v_token = jwt.sign({ email, password }, process.env.JWT_SECRET, {
-    expiresIn: "1h",
-  });
+  // const v_token = jwt.sign({ email, password }, process.env.JWT_SECRET, {
+  //   expiresIn: "1h",
+  // });
 
   // const link = `http://192.168.0.108:3000/api/v1/verifies/${v_token}`;
-  // console.log("Signing Up", link);
+  console.log("Signing Up");
 
   // const msg = {
   //   to: `${email}`, // Change to your recipient
@@ -42,7 +42,10 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   const newUser = await User.create(req.body);
   console.log("User Created");
-  const token = signToken(newUser._id);
+  const token = signToken({
+    id: newUser._id,
+    phn: newUser.phone,
+  });
 
   res.status(201).json({
     status: "success",
