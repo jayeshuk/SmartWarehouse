@@ -37,8 +37,7 @@ export default function ProductCard(props) {
               alignSelf: 'center',
             }}
             theme={{fonts: {medium: 'Comic Sans'}}}>
-            {'\u20B9'}
-            {rate} /sack
+            {rate !== 0 ? `${'\u20B9'} ${rate}/sack` : `Not for sale`}
           </Text>
         </Card.Content>
       </Pressable>

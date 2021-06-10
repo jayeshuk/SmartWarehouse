@@ -199,7 +199,7 @@ export default function MySpace() {
   const CallProduces = async (arr, total, free, update_time) => {
     await axios({
       method: 'post',
-      url: 'http://192.168.0.108:3000/api/v1/produces/call/',
+      url: 'http://192.168.43.132:3000/api/v1/produces/call/',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -210,12 +210,24 @@ export default function MySpace() {
         setLastUpdate(update_time);
         if (p_data.length > 0) {
           p_data.push({name: 'Free Space', quantity: Number(free)});
+          p_data.push({
+            name: 'Preoccupied',
+            quantity: Number(total) - Number(free),
+          });
         } else {
-          p_data.push({name: 'Free Space', quantity: Number(total)});
+          if (total === free)
+            p_data.push({name: 'Free Space', quantity: Number(total)});
+          else if (free < total)
+            p_data.push({
+              name: 'Preoccupied',
+              quantity: Number(total) - Number(free),
+            });
         }
         p_data.forEach(p => {
           if (p.name === 'Free Space') {
             p.color = '#c7c7c7';
+          } else if (p.name === 'Preoccupied') {
+            p.color = '#fff345';
           } else {
             // p.color = '#' + Math.floor(Math.random() * 16777215).toString(16);
             p.color = getRandomColor();
@@ -310,20 +322,26 @@ export default function MySpace() {
                 }}>
                 Current Occupancy
               </Subheading>
-              <PieChart
-                data={pieData}
-                width={screenWidth}
-                height={250}
-                chartConfig={chartConfig}
-                accessor={'quantity'}
-                backgroundColor={'transparent'}
-                paddingLeft={'15'}
-                center={[10, 10]}
-                // absolute
-                // hasLegend={false}
-                avoidFalseZero={true}
-                bgColor={'red'}
-              />
+              <View>
+                <PieChart
+                  style={{
+                    marginVertical: 8,
+                    borderRadius: 16,
+                  }}
+                  data={pieData}
+                  width={screenWidth}
+                  height={250}
+                  chartConfig={chartConfig}
+                  accessor={'quantity'}
+                  backgroundColor={'transparent'}
+                  paddingLeft={'15'}
+                  center={[-2, -5]}
+                  // absolute
+                  // hasLegend={false}
+                  avoidFalseZero={true}
+                  bgColor={'red'}
+                />
+              </View>
               <Caption style={{alignSelf: 'center'}}>
                 Last Updated : {lastUpdate}
               </Caption>

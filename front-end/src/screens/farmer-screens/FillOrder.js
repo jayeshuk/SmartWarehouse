@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text} from 'react-native';
-import {Button, Title, TextInput, Snackbar} from 'react-native-paper';
+import {Button, Title, TextInput, HelperText} from 'react-native-paper';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 
@@ -9,6 +9,7 @@ export default function FillOrder({route, navigation}) {
   const [phone, setPhone] = useState('');
   const [qty, setQty] = useState('');
   const [amount, setAmount] = useState();
+  const [price, setPrice] = useState();
   const [details, setDetails] = useState(route.params);
 
   const logged_user = useSelector(state => state.main_app.logged_user);
@@ -20,7 +21,8 @@ export default function FillOrder({route, navigation}) {
   var data = JSON.stringify({
     name: name,
     quantity: qty,
-    amount: amount,
+    price_to_sell: price,
+    amount_payable_byfarmer: amount,
     farmer_phone: phone,
     farmer_id: logged_user.id,
     wareowner_id: details.wareowner_id,
@@ -83,6 +85,19 @@ export default function FillOrder({route, navigation}) {
           style={{width: '80%', height: 45, alignSelf: 'center'}}
           onBlur={() => setAmount(qty * route.params.rate)}
         />
+        <HelperText style={{marginLeft: '8%'}} type="info" visible={true}>
+          Available Space is {route.params.freespace - qty} Sqft.
+        </HelperText>
+        <TextInput
+          label="Goods Selling Price"
+          value={price}
+          mode="outlined"
+          onChangeText={text => setPrice(text)}
+          style={{width: '80%', height: 45, alignSelf: 'center'}}
+        />
+        <HelperText style={{marginLeft: '8%'}} type="info" visible={true}>
+          Skip "Goods Selling Price" , If Not For Sale.
+        </HelperText>
         <View
           style={{
             flexDirection: 'row',

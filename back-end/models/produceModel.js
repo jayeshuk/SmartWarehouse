@@ -15,7 +15,11 @@ const produceSchema = new mongoose.Schema({
   farmer_id: {
     type: mongoose.ObjectId,
   },
-  amount: {
+  price_to_sell: {
+    type: Number,
+    default: 0,
+  },
+  amount_payable_byfarmer: {
     type: Number,
   },
   wareowner_id: {

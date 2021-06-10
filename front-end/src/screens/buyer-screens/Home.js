@@ -2,13 +2,36 @@ import * as React from 'react';
 import {View, Text, ScrollView, RefreshControl} from 'react-native';
 import {Searchbar} from 'react-native-paper';
 import ProductCard from '../../components/atoms/ProductCard';
+import axios from 'axios';
 
 export default function Home({navigation}) {
   const [refreshing, setRefreshing] = React.useState(false);
+  const [data, setData] = React.useState([]);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    //Load The THings Again
+    LoadProducts();
     setTimeout(() => setRefreshing(false), 2000);
+  }, []);
+
+  var config = {
+    method: 'get',
+    url: 'http://192.168.43.132:3000/api/v1/produces/',
+    headers: {},
+  };
+
+  const LoadProducts = async () => {
+    await axios(config)
+      .then(function (response) {
+        console.log('Loaded:', JSON.stringify(response.data));
+        setData(response.data.data.produces);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  React.useEffect(() => {
+    LoadProducts();
   }, []);
 
   const products = [
@@ -83,14 +106,14 @@ export default function Home({navigation}) {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-        {products.map((item, index) => {
+        {data.map((item, index) => {
           return (
             <ProductCard
-              key={item.id}
-              id={item.id}
+              key={item._id}
+              id={item._id}
               name={item.name}
-              rate={item.rate}
-              address={item.address}
+              rate={item.price_to_sell}
+              address={item.storage_place}
               handlePress={handlePress}
             />
           );
