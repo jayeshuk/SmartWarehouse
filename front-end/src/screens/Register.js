@@ -25,7 +25,7 @@ export default function Register({route, navigation}) {
   const [match, setMatch] = useState(true);
   const [role, setRole] = useState('');
   const giveRole = n => {
-    setRole(n[0].label);
+    setRole(n[0].value);
   };
 
   var formFieldsData = [
@@ -46,7 +46,7 @@ export default function Register({route, navigation}) {
   });
   var config = {
     method: 'post',
-    url: 'http://192.168.0.108:3000/api/v1/users/signup',
+    url: 'http://192.168.43.132:3000/api/v1/users/signup',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -74,32 +74,44 @@ export default function Register({route, navigation}) {
   let regEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   let regPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{6,15}$/;
 
-  const ValidateFields = async type => {
-    await setFirstName({...firstName, isValid: regName.test(firstName.value)});
-    await setLastName({...lastName, isValid: regName.test(lastName.value)});
-    await setPhone({...phone, isValid: regPhone.test(phone.value)});
-    await setEmail({...email, isValid: regEmail.test(email.value)});
-    await setPassword({...password, isValid: regPass.test(password.value)});
-    setConfirmPassword({
-      ...confirmPassword,
-      isValid: regPass.test(confirmPassword.value),
-    });
+  const ValidateFields = async () => {
+    const nav = navigation;
 
-    confirmPassword.value === password.value
-      ? await setMatch(true)
-      : await setMatch(false);
+    const c1 = regName.test(firstName.value);
+    const c2 = regName.test(lastName.value);
+    const c3 = regPhone.test(phone.value);
+    const c4 = regEmail.test(email.value);
+    const c5 = regPass.test(password.value);
+    const c6 = regPass.test(confirmPassword.value);
 
-    if (
-      match &&
-      firstName.isValid &&
-      lastName.isValid &&
-      phone.isValid &&
-      email.isValid &&
-      password.isValid
-    ) {
+    if (c1 && c2 && c3 && c4 && c5 && c6) {
       onRegister();
-      navigation.goBack();
       route.params.setVisible(true);
+      nav.goBack();
+    } else {
+      c1
+        ? setFirstName({...firstName, isValid: c1})
+        : setFirstName({...firstName, isValid: c1});
+      c2
+        ? setLastName({...lastName, isValid: c2})
+        : setLastName({...lastName, isValid: c2});
+      c3
+        ? setPhone({...phone, isValid: c3})
+        : setPhone({...phone, isValid: c3});
+      c4
+        ? setEmail({...email, isValid: c4})
+        : setEmail({...email, isValid: c4});
+      c5
+        ? setPassword({...password, isValid: c5})
+        : setPassword({...password, isValid: c5});
+      c6
+        ? password.value === confirmPassword.value
+          ? setMatch(true)
+          : setMatch(false)
+        : setConfirmPassword({
+            ...confirmPassword,
+            isValid: c6,
+          });
     }
   };
 
@@ -215,7 +227,7 @@ export default function Register({route, navigation}) {
         // contentStyle={{flexDirection: 'row-reverse'}}
         mode="contained"
         onPress={() => {
-          ValidateFields();
+          role ? ValidateFields() : alert('Please Select Role');
         }}>
         Register
       </Button>

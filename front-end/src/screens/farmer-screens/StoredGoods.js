@@ -1,9 +1,11 @@
 import React from 'react';
 import {View, ScrollView} from 'react-native';
 import {Searchbar, List, Text, DataTable} from 'react-native-paper';
+import {useSelector} from 'react-redux';
+import axios from 'axios';
 
 export default function StoredGoods({navigation}) {
-  const data = [
+  const old_data = [
     {
       name: 'Rice',
       area: 1000,
@@ -35,6 +37,7 @@ export default function StoredGoods({navigation}) {
       warehouse: "Ram's Warehouse",
     },
   ];
+  const [data, setData] = React.useState([]);
   const [searchQuery, setSearchQuery] = React.useState('');
   const [page, setPage] = React.useState(0);
   const [low, setLow] = React.useState(0);
@@ -46,6 +49,34 @@ export default function StoredGoods({navigation}) {
     delete obj.handlePress;
     navigation.navigate('WareDetail', obj);
   };
+
+  const logged_user = useSelector(state => state.main_app.logged_user);
+
+  const call_config = {
+    method: 'post',
+    url: 'http://192.168.43.132:3000/api/v1/produces/call/',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: logged_user.container,
+  };
+
+  const CallProduces = async () => {
+    await axios(call_config)
+      .then(async function (response) {
+        var p_data = response.data.data.storedProduces;
+        console.log('PDATA', p_data);
+        setData(p_data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  React.useEffect(() => {
+    CallProduces();
+  }, []);
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <View
@@ -76,8 +107,8 @@ export default function StoredGoods({navigation}) {
               return (
                 <DataTable.Row key={index}>
                   <DataTable.Cell>{item.name}</DataTable.Cell>
-                  <DataTable.Cell numeric>{item.warehouse}</DataTable.Cell>
-                  <DataTable.Cell numeric>{item.area}</DataTable.Cell>
+                  <DataTable.Cell>{item.storage_place}</DataTable.Cell>
+                  <DataTable.Cell numeric>{item.quantity}</DataTable.Cell>
                 </DataTable.Row>
               );
             })
@@ -93,7 +124,9 @@ export default function StoredGoods({navigation}) {
               setPage(page);
               setLow(page * 6);
             }}
-            label={`Page ${page + 1} of ${data.length / 6}`}
+            label={`Page ${page + 1} of ${
+              data.length > 6 ? data.length / 6 : data.length
+            }`}
           />
         </DataTable>
       </View>

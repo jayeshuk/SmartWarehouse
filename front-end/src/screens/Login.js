@@ -8,6 +8,7 @@ import {
   IconButton,
   Colors,
   Divider,
+  HelperText,
 } from 'react-native-paper';
 import axios from 'react-native-axios';
 import RolePicker from '../components/atoms/RolePicker';
@@ -25,6 +26,7 @@ export default function Home({navigation}) {
   const [password, setPassword] = useState('');
   const [visible, setVisible] = useState(false);
   const [hidePass, setHidePass] = useState(false);
+  const [validEmail, setValidEmail] = useState(true);
   const [role, setRole] = useState('');
 
   const dispatch = useDispatch();
@@ -50,7 +52,7 @@ export default function Home({navigation}) {
   // });
   var config = {
     method: 'post',
-    url: 'http://192.168.0.108:3000/api/v1/users/login',
+    url: 'http://192.168.43.132:3000/api/v1/users/login',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -75,6 +77,17 @@ export default function Home({navigation}) {
       }
     } else {
       alert('Login Failed. Please Select a Role.');
+    }
+  };
+
+  const ValidateFields = () => {
+    let regEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const c4 = regEmail.test(email);
+    if (c4) {
+      // loginPress();
+      alert('Loggedin');
+    } else {
+      c4 ? setValidEmail(true) : setValidEmail(false);
     }
   };
 
@@ -135,6 +148,12 @@ export default function Home({navigation}) {
           onChangeText={text => setEmail(text)}
           style={{width: '80%', height: 45, alignSelf: 'center'}}
         />
+        <HelperText
+          style={{marginLeft: '8%'}}
+          type="error"
+          visible={!validEmail}>
+          Email is Invalid!
+        </HelperText>
         <View
           style={{
             flexDirection: 'row',
@@ -178,7 +197,7 @@ export default function Home({navigation}) {
         style={{alignSelf: 'center', margin: '10%'}}
         labelStyle={{fontSize: 16}}
         onPress={() => {
-          loginPress();
+          ValidateFields();
         }}>
         Log In
       </Button>
