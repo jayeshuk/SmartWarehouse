@@ -31,7 +31,7 @@ export default function FillOrder({route, navigation}) {
 
   var config = {
     method: 'patch',
-    url: `http://192.168.43.132:3000/api/v1/users/sendorder/${details.wareowner_id}`,
+    url: `http://192.168.0.108:3000/api/v1/users/sendorder/${details.wareowner_id}`,
     headers: {
       'Content-Type': 'application/json',
     },

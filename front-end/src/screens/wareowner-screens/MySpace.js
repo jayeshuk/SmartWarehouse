@@ -127,7 +127,7 @@ export default function MySpace() {
 
   var config = {
     method: 'post',
-    url: 'http://192.168.43.132:3000/api/v1/warehouses/',
+    url: 'http://192.168.0.108:3000/api/v1/warehouses/',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -161,7 +161,7 @@ export default function MySpace() {
 
   var load_config = {
     method: 'get',
-    url: `http://192.168.43.132:3000/api/v1/warehouses/${logged_user.id}`,
+    url: `http://192.168.0.108:3000/api/v1/warehouses/${logged_user.id}`,
     headers: {},
   };
 
@@ -189,7 +189,7 @@ export default function MySpace() {
 
   // var call_config = {
   //   method: 'post',
-  //   url: 'http://192.168.43.132:3000/api/v1/produces/call/',
+  //   url: 'http://192.168.0.108:3000/api/v1/produces/call/',
   //   headers: {
   //     'Content-Type': 'application/json',
   //   },
@@ -199,7 +199,7 @@ export default function MySpace() {
   const CallProduces = async (arr, total, free, update_time) => {
     await axios({
       method: 'post',
-      url: 'http://192.168.43.132:3000/api/v1/produces/call/',
+      url: 'http://192.168.0.108:3000/api/v1/produces/call/',
       headers: {
         'Content-Type': 'application/json',
       },
