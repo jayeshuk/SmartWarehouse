@@ -74,7 +74,7 @@ export default function Register({route, navigation}) {
   let regEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   let regPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{6,15}$/;
 
-  const ValidateFields = async () => {
+  const ValidateFields = () => {
     const nav = navigation;
 
     const c1 = regName.test(firstName.value);

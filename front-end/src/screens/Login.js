@@ -84,8 +84,8 @@ export default function Home({navigation}) {
     let regEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     const c4 = regEmail.test(email);
     if (c4) {
-      // loginPress();
-      alert('Loggedin');
+      loginPress();
+      // alert('Loggedin');
     } else {
       c4 ? setValidEmail(true) : setValidEmail(false);
     }
