@@ -58,6 +58,7 @@ export default function Register({route, navigation}) {
       .then(function (res) {
         if (res.data.status === 'success') {
           navigation && navigation.goBack();
+          route.params.setVisible(true);
         }
         return res.data;
       })
@@ -75,8 +76,6 @@ export default function Register({route, navigation}) {
   let regPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{6,15}$/;
 
   const ValidateFields = () => {
-    const nav = navigation;
-
     const c1 = regName.test(firstName.value);
     const c2 = regName.test(lastName.value);
     const c3 = regPhone.test(phone.value);
@@ -86,8 +85,6 @@ export default function Register({route, navigation}) {
 
     if (c1 && c2 && c3 && c4 && c5 && c6) {
       onRegister();
-      route.params.setVisible(true);
-      nav.goBack();
     } else {
       c1
         ? setFirstName({...firstName, isValid: c1})
