@@ -35,16 +35,16 @@ export default function Home({navigation}) {
     setRole(n[0].value);
   };
 
-  var data = JSON.stringify({
-    email: 'hariom@gmail.com',
-    password: 'Hariom@5678',
-    role: 'warehouseowner',
-  });
   // var data = JSON.stringify({
-  //   email: 'jayeshukalkar@gmail.com',
-  //   password: 'Jayesh@1234',
-  //   role: 'farmer',
+  //   email: 'hariomlapshetwar@gmail.com',
+  //   password: 'Hariom@5678',
+  //   role: 'warehouseowner',
   // });
+  var data = JSON.stringify({
+    email: 'jayeshukalkar@gmail.com',
+    password: 'Jayesh@1234',
+    role: 'farmer',
+  });
   // var data = JSON.stringify({
   //   email: email,
   //   password: password,
@@ -52,7 +52,7 @@ export default function Home({navigation}) {
   // });
   var config = {
     method: 'post',
-    url: 'http://192.168.0.109:3000/api/v1/users/login',
+    url: 'http://192.168.43.132:3000/api/v1/users/login',
     headers: {
       'Content-Type': 'application/json',
     },

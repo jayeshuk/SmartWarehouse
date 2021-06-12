@@ -19,7 +19,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   //   expiresIn: "1h",
   // });
 
-  // const link = `http://192.168.0.109:3000/api/v1/verifies/${v_token}`;
+  // const link = `http://192.168.43.132:3000/api/v1/verifies/${v_token}`;
   console.log("Signing Up");
 
   // const msg = {
@@ -52,8 +52,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     token,
     data: {
       user: newUser,
-      message:
-        "Verification Mail Sent! Kindly verify your email before Logging In.",
+      message: "Verification Mail Sent! Kindly verify your email before Logging In.",
     },
   });
 });
@@ -97,30 +96,26 @@ exports.verifyAccount = catchAsync(async (req, res, next) => {
   const token = req.params.id;
 
   if (token) {
-    jwt.verify(
-      token,
-      process.env.JWT_SECRET,
-      async function (err, decodedToken) {
-        if (err) {
-          return res.status(400).json({
-            status: "failed",
-            error: "Incorrect or expired link",
-          });
-        }
-
-        const { email, password } = decodedToken;
-        const verification = await User.findOneAndUpdate(
-          { email },
-          { verified: true },
-          {
-            new: true, // return modified doc, not original
-            runValidators: true, // validates the update operation
-          }
-        );
-
-        res.status(200).send("<p>Account has been successfully verified!!</p>");
+    jwt.verify(token, process.env.JWT_SECRET, async function (err, decodedToken) {
+      if (err) {
+        return res.status(400).json({
+          status: "failed",
+          error: "Incorrect or expired link",
+        });
       }
-    );
+
+      const { email, password } = decodedToken;
+      const verification = await User.findOneAndUpdate(
+        { email },
+        { verified: true },
+        {
+          new: true, // return modified doc, not original
+          runValidators: true, // validates the update operation
+        }
+      );
+
+      res.status(200).send("<p>Account has been successfully verified!!</p>");
+    });
   } else {
     res.status(400).json({
       status: "failed",

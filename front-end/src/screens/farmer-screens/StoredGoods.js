@@ -1,45 +1,13 @@
 import React from 'react';
-import {View, ScrollView} from 'react-native';
+import {View, ScrollView, RefreshControl} from 'react-native';
 import {Searchbar, List, Text, DataTable} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import axios from 'axios';
 
 export default function StoredGoods({navigation}) {
-  const old_data = [
-    {
-      name: 'Rice',
-      area: 1000,
-      warehouse: "Ram's Warehouse",
-    },
-    {
-      name: 'Paddy',
-      area: 100,
-      warehouse: "Ram's Warehouse",
-    },
-    {
-      name: 'Sugarcane',
-      area: 80,
-      warehouse: "Ram's Warehouse",
-    },
-    {
-      name: 'Corn',
-      area: 500,
-      warehouse: "Ram's Warehouse",
-    },
-    {
-      name: 'Dal',
-      area: 4000,
-      warehouse: "Ram's Warehouse",
-    },
-    {
-      name: 'Rice T2',
-      area: 5000,
-      warehouse: "Ram's Warehouse",
-    },
-  ];
   const [data, setData] = React.useState([]);
   const [searchQuery, setSearchQuery] = React.useState('');
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = React.useState(1);
   const [low, setLow] = React.useState(0);
 
   const onChangeSearch = query => setSearchQuery(query);
@@ -50,11 +18,18 @@ export default function StoredGoods({navigation}) {
     navigation.navigate('WareDetail', obj);
   };
 
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    CallProduces();
+    setTimeout(() => setRefreshing(false), 2000);
+  }, []);
+
   const logged_user = useSelector(state => state.main_app.logged_user);
 
   const call_config = {
     method: 'post',
-    url: 'http://192.168.0.109:3000/api/v1/produces/call/',
+    url: 'http://192.168.43.132:3000/api/v1/produces/call/',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -78,58 +53,63 @@ export default function StoredGoods({navigation}) {
   }, []);
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignContent: 'center',
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-        }}>
-        <Searchbar
-          style={{marginHorizontal: '5%', marginTop: '5%'}}
-          placeholder="Search Goods"
-          onChangeText={onChangeSearch}
-          onIconPress={toggleDrawer}
-          value={searchQuery}
-          icon="menu"
-        />
-      </View>
-      <View style={{margin: '2%'}}>
-        <DataTable>
-          <DataTable.Header>
-            <DataTable.Title>Goods</DataTable.Title>
-            <DataTable.Title numeric>Storage Location</DataTable.Title>
-            <DataTable.Title numeric>Area(sqft.)</DataTable.Title>
-          </DataTable.Header>
-          {data.slice(low, low + 6).length ? (
-            data.slice(low, low + 6).map((item, index) => {
-              return (
-                <DataTable.Row key={index}>
-                  <DataTable.Cell>{item.name}</DataTable.Cell>
-                  <DataTable.Cell>{item.storage_place}</DataTable.Cell>
-                  <DataTable.Cell numeric>{item.quantity}</DataTable.Cell>
-                </DataTable.Row>
-              );
-            })
-          ) : (
-            <DataTable.Row>
-              <DataTable.Cell>No More Records</DataTable.Cell>
-            </DataTable.Row>
-          )}
-          <DataTable.Pagination
-            page={1}
-            numberOfPages={3}
-            onPageChange={page => {
-              setPage(page);
-              setLow(page * 6);
-            }}
-            label={`Page ${page + 1} of ${
-              data.length > 6 ? data.length / 6 : data.length
-            }`}
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
+      <View style={{flex: 1, backgroundColor: 'white'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignContent: 'center',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+          }}>
+          <Searchbar
+            style={{marginHorizontal: '5%', marginTop: '5%'}}
+            placeholder="Search Goods"
+            onChangeText={onChangeSearch}
+            onIconPress={toggleDrawer}
+            value={searchQuery}
+            icon="menu"
           />
-        </DataTable>
+        </View>
+        <View style={{margin: '2%'}}>
+          <DataTable>
+            <DataTable.Header>
+              <DataTable.Title>Goods</DataTable.Title>
+              <DataTable.Title numeric>Storage Location</DataTable.Title>
+              <DataTable.Title numeric>Area(sqft.)</DataTable.Title>
+            </DataTable.Header>
+            {data.slice(low, low + 6).length ? (
+              data.slice(low, low + 6).map((item, index) => {
+                return (
+                  <DataTable.Row key={index}>
+                    <DataTable.Cell>{item.name}</DataTable.Cell>
+                    <DataTable.Cell>{item.storage_place}</DataTable.Cell>
+                    <DataTable.Cell numeric>{item.quantity}</DataTable.Cell>
+                  </DataTable.Row>
+                );
+              })
+            ) : (
+              <DataTable.Row>
+                <DataTable.Cell>No More Records</DataTable.Cell>
+              </DataTable.Row>
+            )}
+            <DataTable.Pagination
+              page={1}
+              numberOfPages={3}
+              onPageChange={page => {
+                setPage(page);
+                setLow(page * 6);
+              }}
+              label={`Page ${page} of ${
+                data.length > 6 ? data.length / 6 : data.length
+              }`}
+            />
+          </DataTable>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }

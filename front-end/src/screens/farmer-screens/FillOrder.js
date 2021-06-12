@@ -11,6 +11,7 @@ export default function FillOrder({route, navigation}) {
   const [amount, setAmount] = useState();
   const [price, setPrice] = useState();
   const [details, setDetails] = useState(route.params);
+  const [errorFlag, setErrorFlag] = useState(true);
 
   const logged_user = useSelector(state => state.main_app.logged_user);
 
@@ -31,7 +32,7 @@ export default function FillOrder({route, navigation}) {
 
   var config = {
     method: 'patch',
-    url: `http://192.168.0.109:3000/api/v1/users/sendorder/${details.wareowner_id}`,
+    url: `http://192.168.43.132:3000/api/v1/users/sendorder/${details.wareowner_id}`,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -85,9 +86,19 @@ export default function FillOrder({route, navigation}) {
           style={{width: '80%', height: 45, alignSelf: 'center'}}
           onBlur={() => setAmount(qty * route.params.rate)}
         />
-        <HelperText style={{marginLeft: '8%'}} type="info" visible={true}>
-          Available Space is {route.params.freespace - qty} Sqft.
-        </HelperText>
+        {Number(qty) > route.params.freespace ? (
+          <HelperText style={{marginLeft: '8%'}} type="error" visible={true}>
+            Area must be less than Available Space!{'\n'} [Available Space:{' '}
+            {route.params.freespace}]
+          </HelperText>
+        ) : (
+          <HelperText style={{marginLeft: '8%'}} type="info" visible={true}>
+            Available Space is{' '}
+            {qty < route.params.freespace ? route.params.freespace - qty : 0}{' '}
+            Sqft.
+          </HelperText>
+        )}
+
         <TextInput
           label="Goods Selling Price"
           value={price}
@@ -115,6 +126,7 @@ export default function FillOrder({route, navigation}) {
         labelStyle={{fontSize: 18}}
         // contentStyle={{flexDirection: 'row-reverse'}}
         mode="contained"
+        disabled={qty < route.params.freespace ? false : true}
         onPress={() => {
           navigation.goBack();
           navigation.goBack();
