@@ -35,21 +35,11 @@ export default function Home({navigation}) {
     setRole(n[0].value);
   };
 
-  // var data = JSON.stringify({
-  //   email: 'hariomlapshetwar@gmail.com',
-  //   password: 'Hariom@5678',
-  //   role: 'warehouseowner',
-  // });
   var data = JSON.stringify({
-    email: 'jayeshukalkar@gmail.com',
-    password: 'Jayesh@1234',
-    role: 'farmer',
+    email: email,
+    password: password,
+    role: role.length > 0 ? role.toLowerCase() : '',
   });
-  // var data = JSON.stringify({
-  //   email: email,
-  //   password: password,
-  //   role: role.length > 0 ? role.toLowerCase() : '',
-  // });
   var config = {
     method: 'post',
     url: 'http://192.168.43.132:3000/api/v1/users/login',
