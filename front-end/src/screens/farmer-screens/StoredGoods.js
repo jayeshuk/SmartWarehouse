@@ -54,7 +54,7 @@ export default function StoredGoods({navigation}) {
 
   const call_config = {
     method: 'post',
-    url: 'http://192.168.0.108:3000/api/v1/produces/call/',
+    url: 'http://192.168.0.109:3000/api/v1/produces/call/',
     headers: {
       'Content-Type': 'application/json',
     },

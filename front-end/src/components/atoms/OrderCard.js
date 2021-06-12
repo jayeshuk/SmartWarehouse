@@ -16,7 +16,7 @@ export default function OrderCard(props) {
 
   var config = {
     method: 'post',
-    url: 'http://192.168.0.108:3000/api/v1/produces/',
+    url: 'http://192.168.0.109:3000/api/v1/produces/',
     headers: {
       'Content-Type': 'application/json',
     },

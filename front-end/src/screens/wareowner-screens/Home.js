@@ -19,7 +19,7 @@ export default function Home() {
 
   var config = {
     method: 'post',
-    url: `http://192.168.0.108:3000/api/v1/users/loadorder/${logged_user.id}`,
+    url: `http://192.168.0.109:3000/api/v1/users/loadorder/${logged_user.id}`,
     headers: {},
   };
 
